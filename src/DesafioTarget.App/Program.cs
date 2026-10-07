@@ -57,5 +57,20 @@ Console.WriteLine($"\nMovimentação {movimentacao1.Id}: estoque final {moviment
 var movimentacao2 = servicoEstoque.Movimentar(101, TipoMovimentacao.Saida, 20, "Venda de produto 2");
 Console.WriteLine($"Movimentação {movimentacao2.Id}: estoque final {movimentacao2.EstoqueFinal}");
 
-var movimentacao3 = servicoEstoque.Movimentar(103, TipoMovimentacao.Saida, 500, "Venda grande");
-Console.WriteLine($"Movimentação {movimentacao3.Id}: estoque final {movimentacao3.EstoqueFinal}");
+
+// teste de movimentação com quantidade maior que o estoque disponível e descrição vazia
+// pegando a exceção e mostrando a mensagem de erro
+try
+{
+    var movimentacao3 = servicoEstoque.Movimentar(103, TipoMovimentacao.Saida, 500, "Venda grande");
+    Console.WriteLine($"Movimentação {movimentacao3.Id}: estoque final {movimentacao3.EstoqueFinal}");
+}
+catch (InvalidOperationException ex)
+{
+    Console.WriteLine($"Erro ao movimentar estoque: {ex.Message}");
+}
+catch (ArgumentException ex)
+{
+    Console.WriteLine($"Dados inválidos: {ex.Message}");
+}
+Console.WriteLine("O programa continua rodando");
