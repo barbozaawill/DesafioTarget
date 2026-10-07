@@ -1,7 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<ItemGroup>
-		<None Update="Dados\*.json" CopyToOutputDirectory="PreserveNewest"/>
+	  <Compile Remove="estoques.json\**" />
+	  <Compile Remove="vendas.json\**" />
+	  <EmbeddedResource Remove="estoques.json\**" />
+	  <EmbeddedResource Remove="vendas.json\**" />
+	  <None Remove="estoques.json\**" />
+	  <None Remove="vendas.json\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="Dados\*.json" CopyToOutputDirectory="PreserveNewest" />
 	</ItemGroup>
 	
   <PropertyGroup>
@@ -12,8 +21,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="estoques.json\" />
-    <Folder Include="vendas.json\" />
+    <Folder Include="Dados\" />
   </ItemGroup>
 
 </Project>
