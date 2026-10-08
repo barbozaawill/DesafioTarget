@@ -1,5 +1,6 @@
 ﻿using DesafioTarget.App.Comissao;
 using DesafioTarget.App.Estoque;
+using DesafioTarget.App.Juros;
 using System.Text.Json;
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -103,4 +104,8 @@ int LerInteiro(string pergunta)
         Console.WriteLine("Digite um número inteiro válido: ");
     }
 }
+
+Console.WriteLine($"\n{CalculadoraJuros.Calcular(1000m, new DateOnly(2026, 10, 1), new DateOnly(2026, 10, 5)):C}");  
+Console.WriteLine($"{CalculadoraJuros.Calcular(1000m, new DateOnly(2026, 9, 25), new DateOnly(2026, 10, 5)):C}");    
+Console.WriteLine($"{CalculadoraJuros.Calcular(1000m, new DateOnly(2026, 10, 10), new DateOnly(2026, 10, 5)):C}");   
 
