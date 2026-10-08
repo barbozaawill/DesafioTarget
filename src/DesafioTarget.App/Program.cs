@@ -2,6 +2,7 @@
 using DesafioTarget.App.Estoque;
 using DesafioTarget.App.Juros;
 using System.Text.Json;
+using System.Globalization; // tive problema utilizando o parser sem globalization por que o decimal estava com vírgula e não ponto..
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
@@ -89,6 +90,28 @@ catch (ArgumentException ex)
 {
     Console.WriteLine($"Dados inválidos: {ex.Message}");
 }
+
+Console.WriteLine("\n Cálculo de juros");
+
+decimal valorOriginal = LerDecimal("Valor original: ");
+DateOnly vencimento = LerData("Data de vencimento (dd/MM/yyyy): ");
+DateOnly hoje = DateOnly.FromDateTime(DateTime.Now);
+
+try
+{
+    decimal juros = CalculadoraJuros.Calcular(valorOriginal, vencimento, hoje);
+
+    Console.WriteLine($"Valor original: {valorOriginal:C}");
+    Console.WriteLine($"Vencimento: {vencimento:dd/MM/yyyy}");
+    Console.WriteLine($"Data do cálculo: {hoje:dd/MM/yyyy}");
+    Console.WriteLine($"Juros (2,5%/dia): {juros:C}");
+    Console.WriteLine($"Valor atualizado: {valorOriginal + juros:C}");
+}
+catch (ArgumentException ex)
+{
+    Console.WriteLine($"Erro no cálculo de juros: {ex.Message}");
+}
+
 int LerInteiro(string pergunta)
 {
     while (true)
@@ -105,7 +128,35 @@ int LerInteiro(string pergunta)
     }
 }
 
-Console.WriteLine($"\n{CalculadoraJuros.Calcular(1000m, new DateOnly(2026, 10, 1), new DateOnly(2026, 10, 5)):C}");  
-Console.WriteLine($"{CalculadoraJuros.Calcular(1000m, new DateOnly(2026, 9, 25), new DateOnly(2026, 10, 5)):C}");    
-Console.WriteLine($"{CalculadoraJuros.Calcular(1000m, new DateOnly(2026, 10, 10), new DateOnly(2026, 10, 5)):C}");   
+decimal LerDecimal(string pergunta)
+{
+    while (true)
+    {
+        Console.Write(pergunta);
+        string? texto = Console.ReadLine();
+
+        if (decimal.TryParse(texto, NumberStyles.Number, new CultureInfo("pt-BR"), out decimal valor))
+        {
+            return valor;
+        }
+        Console.WriteLine("Valor inválido. Use vírgula para os centavos");
+    }
+}   
+
+DateOnly LerData(string pergunta)
+{
+    while (true)
+    {
+        Console.Write(pergunta);
+        string? texto = Console.ReadLine();
+
+        if (DateOnly.TryParseExact(texto, "dd/MM/yyyy" ,out DateOnly data))
+        {
+            return data;
+        }
+        Console.WriteLine("Digite uma data válida no formato dd/MM/yyyy: ");
+    }
+}
+
+
 
