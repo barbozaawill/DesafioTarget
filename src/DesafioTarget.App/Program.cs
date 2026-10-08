@@ -29,7 +29,6 @@ if (arquivoEstoque is null)
 
 Console.WriteLine($"Vendas lidas: {arquivoVendas.Vendas.Count}");
 
-
 var vendasPorVendedor = arquivoVendas.Vendas.GroupBy(v => v.Vendedor);
 
 foreach (var grupo in vendasPorVendedor)
@@ -43,7 +42,6 @@ foreach (var grupo in vendasPorVendedor)
 }
 
 Console.WriteLine($"\nProdutos em estoque: {arquivoEstoque.Estoque.Count}");
-
 foreach (var produto in arquivoEstoque.Estoque)
 {
     Console.WriteLine($"Produto {produto.CodigoProduto} - {produto.DescricaoProduto}: {produto.Estoque} unidades em estoque");
@@ -51,19 +49,36 @@ foreach (var produto in arquivoEstoque.Estoque)
 
 var servicoEstoque = new ServicoEstoque(arquivoEstoque.Estoque);
 
-var movimentacao1 = servicoEstoque.Movimentar(101, TipoMovimentacao.Entrada, 50, "Reabastecimento de produto 1");
-Console.WriteLine($"\nMovimentação {movimentacao1.Id}: estoque final {movimentacao1.EstoqueFinal}");
+Console.WriteLine("\nNova movimentação");
+int codigo = LerInteiro("Código do produto: ");
 
-var movimentacao2 = servicoEstoque.Movimentar(101, TipoMovimentacao.Saida, 20, "Venda de produto 2");
-Console.WriteLine($"Movimentação {movimentacao2.Id}: estoque final {movimentacao2.EstoqueFinal}");
+Console.Write("Tipo (E = Entrada / S = Saída): ");
+string tipoDigitado = Console.ReadLine()?.ToUpper() ?? "";
 
+TipoMovimentacao tipo;
+if (tipoDigitado == "E")
+{
+    tipo = TipoMovimentacao.Entrada;
+}
+else if (tipoDigitado == "S")
+{
+    tipo = TipoMovimentacao.Saida;
+}
+else
+{
+    Console.WriteLine("Tipo inválido. Use E para entrada ou S para saída.");
+    return;
+}
 
-// teste de movimentação com quantidade maior que o estoque disponível e descrição vazia
-// pegando a exceção e mostrando a mensagem de erro
+int quantidadeMov = LerInteiro("Quantidade: ");
+
+Console.Write("Descrição: ");
+string descricao = Console.ReadLine() ?? "";
+
 try
 {
-    var movimentacao3 = servicoEstoque.Movimentar(103, TipoMovimentacao.Saida, 500, "Venda grande");
-    Console.WriteLine($"Movimentação {movimentacao3.Id}: estoque final {movimentacao3.EstoqueFinal}");
+    var mov = servicoEstoque.Movimentar(codigo, tipo, quantidadeMov, descricao);
+    Console.WriteLine($"\nMovimentação {mov.Id} registrada. Estoque final: {mov.EstoqueFinal}");
 }
 catch (InvalidOperationException ex)
 {
@@ -73,4 +88,19 @@ catch (ArgumentException ex)
 {
     Console.WriteLine($"Dados inválidos: {ex.Message}");
 }
-Console.WriteLine("O programa continua rodando");
+int LerInteiro(string pergunta)
+{
+    while (true)
+    {
+        Console.Write(pergunta);
+        string? texto = Console.ReadLine();
+
+        if (int.TryParse(texto, out int numero))
+        {
+            return numero;
+        }
+
+        Console.WriteLine("Digite um número inteiro válido: ");
+    }
+}
+
